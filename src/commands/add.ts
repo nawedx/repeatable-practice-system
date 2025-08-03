@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { SpacedRepetitionService } from '../services/SpacedRepetitionService';
-import { connectDatabase } from '../utils/database';
+import { connectDatabase, disconnectDatabase } from '../utils/database';
 
 export const addCommand = new Command('add')
   .description('Add a new problem to your practice list')
@@ -105,12 +105,14 @@ export const addCommand = new Command('add')
       console.log();
       console.log(chalk.gray('💡 This problem will appear in tomorrow\'s practice session.'));
       
+      await disconnectDatabase();
     } catch (error) {
       if (error instanceof Error && error.message.includes('duplicate key')) {
         console.error(chalk.red('❌ A problem with this title already exists.'));
       } else {
         console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : 'Unknown error');
       }
+      await disconnectDatabase();
       process.exit(1);
     }
   });

@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import Table from 'cli-table3';
 import { format, formatDistanceToNow } from 'date-fns';
 import { SpacedRepetitionService } from '../services/SpacedRepetitionService';
-import { connectDatabase } from '../utils/database';
+import { connectDatabase, disconnectDatabase } from '../utils/database';
 
 export const upcomingCommand = new Command('upcoming')
   .description('Show upcoming problem reviews')
@@ -23,6 +23,7 @@ export const upcomingCommand = new Command('upcoming')
       if (problems.length === 0) {
         console.log(chalk.green(`🎉 No problems scheduled for the next ${days} days!`));
         console.log(chalk.gray('   Great job staying ahead of your reviews.'));
+        await disconnectDatabase();
         return;
       }
       
@@ -77,8 +78,10 @@ export const upcomingCommand = new Command('upcoming')
       console.log();
       console.log(chalk.gray('💡 Use'), chalk.white('dsa today'), chalk.gray('to see problems due today'));
       
+      await disconnectDatabase();
     } catch (error) {
       console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : 'Unknown error');
+      await disconnectDatabase();
       process.exit(1);
     }
   });

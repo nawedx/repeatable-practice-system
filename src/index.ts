@@ -60,8 +60,18 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-program.parse();
+async function main() {
+  program.parse();
 
-if (!process.argv.slice(2).length) {
-  program.outputHelp();
+  if (!process.argv.slice(2).length) {
+    program.outputHelp();
+    await disconnectDatabase();
+    process.exit(0);
+  }
 }
+
+main().catch(async (error) => {
+  console.error('Error:', error);
+  await disconnectDatabase();
+  process.exit(1);
+});

@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import Table from 'cli-table3';
 import { AnalyticsService } from '../services/AnalyticsService';
-import { connectDatabase } from '../utils/database';
+import { connectDatabase, disconnectDatabase } from '../utils/database';
 
 export const statsCommand = new Command('stats')
   .description('Show your progress statistics')
@@ -112,8 +112,10 @@ export const statsCommand = new Command('stats')
         console.log(chalk.green('🚀 Your solving speed is improving significantly!'));
       }
       
+      await disconnectDatabase();
     } catch (error) {
       console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : 'Unknown error');
+      await disconnectDatabase();
       process.exit(1);
     }
   });

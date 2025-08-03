@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { SpacedRepetitionService, DifficultyRating } from '../services/SpacedRepetitionService';
-import { connectDatabase } from '../utils/database';
+import { connectDatabase, disconnectDatabase } from '../utils/database';
 
 export const completeCommand = new Command('complete')
   .description('Mark a problem as completed')
@@ -93,8 +93,10 @@ export const completeCommand = new Command('complete')
         console.log(chalk.yellow('🔄 This problem will appear again tomorrow.'));
       }
       
+      await disconnectDatabase();
     } catch (error) {
       console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : 'Unknown error');
+      await disconnectDatabase();
       process.exit(1);
     }
   });

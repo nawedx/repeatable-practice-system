@@ -50,6 +50,5 @@ const scheduleSchema = new Schema<ISchedule>({
 });
 
 scheduleSchema.index({ nextReview: 1 });
-scheduleSchema.index({ problemId: 1 });
 
 export const Schedule = model<ISchedule>('Schedule', scheduleSchema);

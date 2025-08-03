@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import Table from 'cli-table3';
 import { format } from 'date-fns';
 import { SpacedRepetitionService } from '../services/SpacedRepetitionService';
-import { connectDatabase } from '../utils/database';
+import { connectDatabase, disconnectDatabase } from '../utils/database';
 
 export const todayCommand = new Command('today')
   .description('Show today\'s problems to solve')
@@ -15,6 +15,7 @@ export const todayCommand = new Command('today')
       
       if (problems.length === 0) {
         console.log(chalk.green('🎉 No problems scheduled for today! Great job staying on track.'));
+        await disconnectDatabase();
         return;
       }
       
@@ -53,8 +54,10 @@ export const todayCommand = new Command('today')
       console.log(chalk.gray('   Example:'), chalk.white('dsa complete "Two Sum" 15 good'));
       console.log(chalk.gray('   Difficulty: easy | good | hard | failed'));
       
+      await disconnectDatabase();
     } catch (error) {
       console.error(chalk.red('❌ Error:'), error instanceof Error ? error.message : 'Unknown error');
+      await disconnectDatabase();
       process.exit(1);
     }
   });
