@@ -5,6 +5,10 @@ import { format } from 'date-fns';
 import { SpacedRepetitionService } from '../services/SpacedRepetitionService';
 import { connectDatabase, disconnectDatabase } from '../utils/database';
 
+const createHyperlink = (text: string, url: string): string => {
+  return `\u001B]8;;${url}\u0007${text}\u001B]8;;\u0007`;
+};
+
 export const todayCommand = new Command('today')
   .description('Show today\'s problems to solve')
   .action(async () => {
@@ -28,9 +32,10 @@ export const todayCommand = new Command('today')
           chalk.cyan('Difficulty'),
           chalk.cyan('Topics'),
           chalk.cyan('Est. Time'),
-          chalk.cyan('Repetition')
+          chalk.cyan('Repetition'),
+          chalk.cyan('Link')
         ],
-        colWidths: [35, 12, 30, 12, 12]
+        colWidths: [20, 10, 15, 10, 10, 150]
       });
       
       problems.forEach(problem => {
@@ -39,17 +44,23 @@ export const todayCommand = new Command('today')
           problem.difficulty === 'medium' ? chalk.yellow :
           chalk.red;
         
+        const linkDisplay = problem.leetcodeUrl 
+          ? createHyperlink(problem.leetcodeUrl, problem.leetcodeUrl)
+          : '-';
+        
         table.push([
-          problem.title.slice(0, 33),
+          problem.title.slice(0, 18),
           difficultyColor(problem.difficulty),
-          problem.topics.join(', ').slice(0, 28),
+          problem.topics.join(', ').slice(0, 13),
           `${problem.estimatedTime}m`,
-          `#${problem.schedule.repetitions + 1}`
+          `#${problem.schedule.repetitions + 1}`,
+          linkDisplay
         ]);
       });
       
       console.log(table.toString());
       console.log();
+      
       console.log(chalk.gray('💡 Use'), chalk.white('dsa complete "<title>" <time> <difficulty>'), chalk.gray('to mark a problem as done'));
       console.log(chalk.gray('   Example:'), chalk.white('dsa complete "Two Sum" 15 good'));
       console.log(chalk.gray('   Difficulty: easy | good | hard | failed'));
