@@ -5,62 +5,80 @@ A smart CLI application that helps you master Data Structures & Algorithms using
 ## ✨ Why This Tool?
 
 - **🧠 Smart Learning**: Uses proven spaced repetition algorithm to maximize retention
-- **📈 Track Progress**: See your improvement over time with detailed analytics  
+- **📈 Track Progress**: See your improvement over time with detailed analytics
 - **🎯 Focus Practice**: Identifies weak topics and adjusts accordingly
 - **⚡ CLI Efficiency**: Fast, keyboard-friendly interface for developers
 - **🔄 No Setup Hassle**: Fully containerized with Docker
 
+## 📋 Prerequisites
+
+Before you start, make sure you have these installed:
+
+- **Node.js 18+** - [Download here](https://nodejs.org/)
+- **Docker Desktop** - [Download here](https://www.docker.com/products/docker-desktop)
+
+**Verify installation:**
+```bash
+node --version    # Should show v18 or higher
+docker --version  # Should show Docker version
+```
+
 ## 🚀 Quick Start (2 minutes)
 
-### Option 1: Docker (Recommended)
 ```bash
-# 1. Clone the repository
+# Step 1: Clone the repository
 git clone https://github.com/nawedx/repeatable-practice-system.git
 cd repeatable-practice-system
+```
+✓ *You should now be in the `repeatable-practice-system` directory*
 
-# 2. Start everything with one command
+```bash
+# Step 2: Start the database
 docker-compose up -d
-
-# 3. Install CLI globally
-npm install && npm run build && npm link
-
-# 4. You're ready!
-dsa help
 ```
+✓ *Run `docker ps` - you should see `dsa-mongo` container running*
 
-### Option 2: Local Development
 ```bash
-# 1. Clone and install dependencies
-git clone https://github.com/nawedx/repeatable-practice-system.git
-cd repeatable-practice-system
-npm install
+# Step 3: Install and build the CLI
+npm install && npm run build && npm link
+```
+✓ *This installs dependencies, compiles TypeScript, and makes `dsa` command available globally*
 
-# 2. Build and link CLI
-npm run build
-npm link
-
-# 3. Start MongoDB (if you have it locally)
-# Otherwise use: docker run -d -p 27017:27017 --name mongo mongo:7
-
-# 4. Ready to use!
+```bash
+# Step 4: Verify it works!
 dsa help
 ```
+✓ *You should see the help menu with all available commands*
 
-## 🎯 Your First Session
+## 🎯 Try It Now (30 seconds)
+
+Get started with a quick demo:
 
 ```bash
 # Add your first problem
 dsa add "Two Sum" easy "array,hash-table" --time 15 --url "https://leetcode.com/problems/two-sum/"
+```
+✓ *You should see: "Problem 'Two Sum' added successfully!"*
 
-# Check today's problems
+```bash
+# Check what's due today
 dsa today
+```
+✓ *You should see "Two Sum" in your today's list*
 
-# After solving, mark it complete
-dsa complete "Two Sum" 12 good
+```bash
+# Mark it complete (try it even if you haven't solved it yet!)
+dsa complete "Two Sum" 15 good
+```
+✓ *Problem marked as complete - it will appear again in 3 days*
 
+```bash
 # View your progress
 dsa stats
 ```
+✓ *See your first stats! 1 problem completed, streak started*
+
+**Congratulations! You're ready to build your DSA practice habit.**
 
 ## 📚 How It Works
 
@@ -198,24 +216,39 @@ Default password (`password`) is for development only. Use strong credentials in
 
 ### Common Issues
 
-**CLI command not found after `npm link`?**
+**"dsa: command not found" after `npm link`?**
 ```bash
 # Rebuild and relink
 npm run build && npm link
+
+# If still not working, check npm global bin path
+npm config get prefix
+# Add /bin to your PATH if needed
 ```
 
-**MongoDB connection failed?**
+**"MongoDB connection failed"?**
 ```bash
-# Make sure Docker is running
-docker-compose up -d
-# Or check if MongoDB is running locally
+# Check if Docker is running
 docker ps
+
+# If no containers, start them
+docker-compose up -d
+
+# Check logs if still failing
+docker-compose logs mongodb
 ```
 
-**Want to reset all data?**
+**Want to start fresh?**
 ```bash
-docker-compose down -v  # Removes volumes
+docker-compose down -v  # Removes all data
 docker-compose up -d    # Fresh start
+```
+
+**Need to uninstall?**
+```bash
+npm unlink dsa              # Remove global command
+docker-compose down -v      # Remove database
+rm -rf node_modules dist    # Clean build files
 ```
 
 ## 🚀 What's Next?
@@ -233,12 +266,6 @@ We welcome contributions! Areas that need help:
 - 📊 More analytics and visualizations  
 - 🔧 Performance optimizations
 - 📱 Web interface development
-
-## 🎯 Success Stories
-
-> *"Went from solving 2 problems/week to 15+/week. The spaced repetition actually works!"* - Sarah K.
-
-> *"Finally stopped forgetting algorithms I learned months ago. Game changer for interviews."* - Mike D.
 
 ## 📄 License
 
